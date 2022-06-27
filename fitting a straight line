@@ -1,0 +1,26 @@
+###fit a straight line
+x=[1,2,3,4,6,8]
+y=[2.4,3,3.6,4,5,6]
+xy=[x*y for x,y in zip(x,y)]
+print("xy:",xy)
+x2=[x*x for x,x in zip(x,x)]
+print("x2:",x2)
+sumofx=sum(x)
+print("sum of x:",sumofx)
+sumofy=sum(y)
+print("sum of y:",sumofy)
+sumofxy=sum(xy)
+print("sum of xy:",sumofxy)
+sumofx2=sum(x2)
+print("sum of x2:",sumofx2)
+n=len(xy)
+print(n)
+c=((sumofx2*sumofy)-(sumofx*sumofxy))
+print(c)
+d=((n*sumofx2)-(sumofx)**2)
+print(d)
+a=c/d
+print(a)
+b=((n*sumofxy)-(sumofx*sumofy))/((n*sumofx2)-(sumofx)**2)
+print(b)
+print("y=",a,'+x',b)
