@@ -1,0 +1,48 @@
+#regression line
+import math
+x=[16,21,26,23,28,24,17,22,21]
+y=[33,38,50,39,52,47,35,43,41]
+xy=[x*y for x,y in zip(x,y)]
+print("xy:",xy)
+x2=[x*x for x,x in zip(x,x)]
+print("x2:",x2)
+y2=[y*y for y,y in zip(y,y)]
+print("y2:",y2)
+sumofx=sum(x)
+print("sum of x:",sumofx)
+sumofxy=sum(xy)
+print("sum of xy:",sumofxy)
+sumofy=sum(y)
+print("sum of y:",sumofy)
+sumofx2=sum(x2)
+print("sum of x2:",sumofx2)
+sumofy2=sum(y2)
+print("sum of y2:",sumofy2)
+n=len(xy)
+print("no.of pairs=",n)
+x1=sumofx/n
+print(x1)
+y1=sumofy/n
+print(y1)
+x1y1=x1*y1
+print("x1y1=",x1y1)
+covxy=((sumofxy)/n)-x1y1
+print("cov of xy",covxy)
+c=((sumofx2)/n)-((x1)**2)
+d=math.sqrt(c)
+print(d)
+e=((sumofy2)/n)-((y1)**2)
+f=math.sqrt(e)
+print(f)
+df=d*f
+print(df)
+r=covxy/df
+print("r=",r)
+#regresion line y on x:
+#(y-y1)=(r*d/f)(x-x1)
+g=(r*f/d)
+print("y-",y1,"=",round(g,2),"(x-",x1,")")
+#regression line x on y:
+#(x-x1)=(r*f/d)(y-y1)
+v=(r*d/f)
+print("x-",x1,"=",round(v,2),"(y-",y1,")")
