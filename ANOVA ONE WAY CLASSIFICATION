@@ -1,0 +1,41 @@
+import scipy.stats as s
+a=[90,82,79,98,83,91]
+b=[105,89,93,104,89,95,86]
+c=[83,89,80,94]
+l=a+b+c
+n=len(l)
+print(n)
+k=3
+los=0.05
+rss=0
+dim=0
+for i in range(len(l)):
+    rss=rss+(l[i]**2)
+    dim=dim+1
+ti=[]
+th=[]
+a1=sum(a)
+ti.append(a1)
+th.append((a1**2)/len(a))
+a2=sum(b)
+ti.append(a2)
+th.append((a2**2)/len(b))
+a3=sum(c)
+ti.append(a3)
+th.append((a3**2)/len(c))
+g=sum(ti)
+sth=sum(th)
+cf=(g**2)/n
+sst=rss-cf
+sstr=sth-cf
+sse=sst-sstr
+msstr=sstr/(k-1)
+msse=sse/(n-k)
+f=msstr/msse
+print("f value is: ",f)
+ftabs=s.f.ppf(1-los,(k-1),(n-k))
+print("ftabs: ",ftabs)
+if(f>ftabs):
+  print("We reject Ho")
+else:
+  print("We accept Ho")
