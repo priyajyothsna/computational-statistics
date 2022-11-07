@@ -1,0 +1,55 @@
+import matplotlib.pyplot as plt
+print('Enter x data:')
+x=list(map(float,input().split()))
+print('Enter y data:')
+y=list(map(float,input().split()))
+n=len(x)
+sx2=sxy=sx3=sx2y=sx4=0
+for i in range(n):
+  sx2+=x[i]**2
+  sxy+=x[i]*y[i]
+  sx3+=x[i]**3
+  sx2y+=(x[i]**2)*(y[i])
+  sx4+=x[i]**4
+val1=sum(y)
+val2=sxy
+val3=sx2y
+a=n
+b=sum(x)
+c=sx2
+d=sx3
+e=sx4
+delta=[[a,b,c],[b,c,d],[c,d,e]]
+delta1=[[val1,b,c],[val2,c,d],[val3,d,e]]
+delta2=[[a,val1,c],[b,val2,d],[c,val3,e]]
+delta3=[[a,b,val1],[b,c,val2],[c,d,val3]]
+def getmatrixminor(m,i,j):
+    return [row[:j] + row[j+1:] for row in (m[:i]+m[i+1:])]
+def getmatrixdeterminant(m):
+    p=len(m)
+    q=len(m[0])
+    if p != q:
+        print('Matrix inverse not possible')
+        exit()
+    #base case for 2x2 matrix
+    if len(m) == 2:
+        return m[0][0]*m[1][1]-m[0][1]*m[1][0]
+
+    determinant = 0
+    for c in range(len(m)):
+        determinant += ((-1)**c)*m[0][c]*getmatrixdeterminant(getmatrixminor(m,0,c))
+    return determinant
+d=getmatrixdeterminant(delta)
+d1=getmatrixdeterminant(delta1)
+d2=getmatrixdeterminant(delta2)
+d3=getmatrixdeterminant(delta3)
+a1=d1/d
+b1=d2/d
+c1=d3/d
+l3=[]
+print('the eq of parabola is y={:.3f}+{:.3f}x+{:.3f}x^2'.format(a1,b1,c1))
+for i in x:
+  l3.append(a1+b1*i+c1*i**2)
+plt.scatter(x,y,color='red')
+plt.plot(x,l3,color='blue')
+plt.show()
