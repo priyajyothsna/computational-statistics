@@ -1,0 +1,77 @@
+import numpy as np
+import scipy.stats as s
+print('enter nmbr of treatments')
+t=int(input())
+print('enter values for each treatment')
+l=[]
+for i in range(t):
+  l.append(list(map(int,input().split())))
+l=np.array(l)
+aplha=float(input('enter level of significance:'))
+sl=[]
+rss=0
+length=0
+for i in l:
+  sl.append(sum(i))
+  for k in i:
+    rss+=k**2
+    length+=1
+cf=sum(sl)**2/length
+sst=rss-cf
+print('rss:',rss)
+print('cf:',cf)
+print('sst:',sst)
+sstr=0
+for i in sl:
+  sstr+=i**2
+sstr=sstr/len(l[0])-cf
+print('sstr:',sstr)
+blocks=[]
+blockssq=0
+for i in range(len(l[0])):
+  blocks.append(sum(l[:,i]))
+for i in blocks:
+  blockssq+=i**2
+ssb=blockssq/len(l)-cf
+print('ssb',ssb)
+sse=sst-sstr-ssb
+print('sse',sse)
+dftr=t-1
+dfb=len(blocks)-1
+p=dftr*dfb
+mstr=sstr/dftr
+msb=ssb/dfb
+mse=sse/p
+ftr=mstr/mse
+fb=msb/mse
+temp=p
+temp1=p
+if ftr<1:
+  ftr=mse/mstr
+  temp=dftr
+  dftr=dfb
+if fb<1:
+  fb=mse/msb
+  temp1=dfb
+  dfb=dftr
+count=0
+print("treatments calculated value:",ftr)
+print("blocks calculated value",fb)
+trtable_value=s.f.ppf(1-alpha,dftr,temp)
+bltable_value=s.f.ppf(1-alpha,dfb,temp1)
+print('treatments table value:',trtable_value)
+print('blocks table value:',bltable_value)
+if ftr>trtable_value:
+  print('treatments hypothesis rejected')
+  count=1
+else:
+  print('treatments hypothesis is accepted')
+if fb>bltable_value:
+  print('blocks hypothesis rejected')
+  count=1
+else:
+  print('blocks hypothesis accepted')
+if count==0:
+  print('overall hypothesis is accepted')
+else:
+  print('overall hypotheis is rejected')
