@@ -1,0 +1,109 @@
+import scipy.stats as s
+print('enter no.of treatments:')
+t=int(input())
+tr=[]
+for i in range(t):
+  print('enter no.of groups for ',str(i+1),' treatment')
+  n=int(input())
+  l1=[]
+  for i in range(n):
+    l=list(map(int,input().split()))
+    l1.append(l)
+  tr.append(l1)
+alpha=float(input('enter level of significance:'))
+yi_bar=[]
+y_bar_bar=[]
+mean_x=0
+mean_y=0
+for i in tr:
+  s1=0
+  s2=0
+  for j in i:
+    s1+=j[0]
+    s2+=j[1]
+  mean_x+=s1
+  mean_y+=s2
+  l=[s1/len(i),s2/len(i)]
+  yi_bar.append(l)
+length=0
+for i in range(len(tr)):
+  length+=len(tr[i])
+y_bar_bar.append(mean_x/length)
+y_bar_bar.append(mean_y/length)
+print('yi_bar:')
+print(yi_bar)
+print('y_bar_bar')
+print(y_bar_bar)
+print('-----------------------------------')
+print('For y1:')
+sse_y1=0
+sst_y1=0
+for i in range(len(tr)):
+  for j in range(len(tr[i])):
+    sse_y1+=(tr[i][j][0]-yi_bar[i][0])**2
+    sst_y1+=(tr[i][j][0]-y_bar_bar[0])**2
+print('sse:',sse_y1)
+print('sst:',sst_y1)
+ssr_y1=sst_y1-sse_y1
+print('ssr:',ssr_y1)
+print('------------------------------------')
+print('For y2:')
+sse_y2=0
+sst_y2=0
+for i in range(len(tr)):
+  for j in range(len(tr[i])):
+    sse_y2+=(tr[i][j][1]-yi_bar[i][1])**2
+    sst_y2+=(tr[i][j][1]-y_bar_bar[1])**2
+ssr_y2=sst_y2-sse_y2
+print('sse:',sse_y2)
+print('sst:',sst_y2)
+print('ssr:',ssr_y2)
+print('---------------------------------------')
+print('For y1*y2:')
+sse_cp=0
+sst_cp=0
+for i in range(len(tr)):
+  for j in range(len(tr[i])):
+    sse_cp+=(tr[i][j][0]*tr[i][j][1])-(yi_bar[i][0]*yi_bar[i][1])
+    sst_cp+=(tr[i][j][0]*tr[i][j][1])-(y_bar_bar[0]*y_bar_bar[1])
+ssr_cp=sst_cp-sse_cp
+print('sse:',sse_cp)
+print('sst:',sst_cp)
+print('ssr:',ssr_cp)
+k=t
+n=length
+p=len(tr[0][1])
+W=[[sse_y1,sse_cp],[sse_cp,sse_y2]]
+T=[[sst_y1,sst_cp],[sst_cp,sst_y2]]
+def getMatrixMinor(m,i,j):
+    return [row[:j] + row[j+1:] for row in (m[:i]+m[i+1:])]
+def getmatrixdeterminant(m):
+    p=len(m)
+    q=len(m[0])
+    if p != q:
+        print('Matrix inverse not possible')
+        exit()
+    #base case for 2x2 matrix
+    if len(m) == 2:
+        return m[0][0]*m[1][1]-m[0][1]*m[1][0]
+
+    determinant = 0
+    for c in range(len(m)):
+        determinant += ((-1)**c)*m[0][c]*getmatrixdeterminant(getMatrixMinor(m,0,c))
+    return determinant
+det_W=getmatrixdeterminant(W)
+det_T=getmatrixdeterminant(T)
+wilks_value=det_W/det_T
+print('wilks value is:',wilks_value)
+f_cal=((n-k-1)/(k-1))*((1-wilks_value**0.5)/(wilks_value**0.5))
+print('F-CALCULATED value is:',f_cal)
+f_table=s.f.ppf(1-alpha,p*(k-1),p*(n-k-1))
+print("F-TABLE value is:",f_table)
+print('inference---')
+if f_cal>f_table:
+  print('WE REJECT NULL HYPOTHESIS')
+  print('there is no homogenity among treatments')
+else:
+  print('WE ACCEPT NULL HYPOTHESIS')
+  print('there is homogenity among treatments')
+
